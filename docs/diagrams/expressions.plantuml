@@ -6,9 +6,13 @@ skinparam monochrome true
 interface ASTNode {
     getLine(): int
     getColumn(): int
+    accept<R, P>(AbstractVisitor<R, P> visitor, ParamType p): R
 }
 
 interface Expression {
+    getType(): Type
+    setType(Type type): void
+    isLValue(): boolean
 }
 
 abstract AbstractExpression implements Expression {

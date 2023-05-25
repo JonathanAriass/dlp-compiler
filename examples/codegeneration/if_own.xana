@@ -1,0 +1,13 @@
+i :: double
+j :: int
+
+def main() do
+    j = -5
+    i = 5.0
+
+    if i == 5.0 do
+        print 'z'
+    else
+        print 'x'
+    end
+end

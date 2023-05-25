@@ -7,7 +7,24 @@ interface ASTNode {
     getColumn(): int
 }
 
-interface Type
+interface Type  {
+    indexing(Type type): Type
+    cast(Type type):Type
+    dot(String type): Type
+    arithmetic(Type type): Type
+    logical(Type type): Type
+    call(List<Expression> args): Type
+    comparison(Type type): Type
+    assignment(Type type): Type
+    isIndexable(): boolean
+    allowDot(String field): boolean
+    isArithmetic(): boolean
+    isLogical(): boolean
+    hasOtherArgs(List<Expression> args): boolean
+    promotableTo(Type to): boolean
+    getNumberOfBytes(): int
+    getFieldOffset(String field): int
+}
 
 ASTNode <|-- Type
 
@@ -40,9 +57,10 @@ class Struct {
 
 Struct  o-- "0.*" StructFields
 
-class StructFields implements AbstractType {
+class StructFields implements AbstractASTNode {
     name: String
     type: Type
+    offset: int
 }
 
 AbstractType <|.. Struct
