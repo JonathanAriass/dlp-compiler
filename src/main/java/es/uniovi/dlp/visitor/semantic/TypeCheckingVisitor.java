@@ -33,15 +33,29 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
                   new Location(assign.getLine(), assign.getColumn()), ErrorReason.LVALUE_REQUIRED));
       return null;
     }
-    if (assign.getLeftExpression().getType().assignment(assign.getRightExpression().getType())
-        == null) {
+    if (!assign.getRightExpression().getType().promotesTo(assign.getLeftExpression().getType())) {
+      System.out.println("ENTRA AQUI");
       ErrorManager.getInstance()
           .addError(
               new Error(
                   new Location(
                       assign.getLeftExpression().getLine(), assign.getLeftExpression().getColumn()),
                   ErrorReason.INCOMPATIBLE_TYPES));
+      return null;
     }
+    //    } else {
+    //      if
+    // (assign.getLeftExpression().getType().assignment(assign.getRightExpression().getType())
+    //          == null) {
+    //        ErrorManager.getInstance()
+    //            .addError(
+    //                new Error(
+    //                    new Location(
+    //                        assign.getLeftExpression().getLine(),
+    //                        assign.getLeftExpression().getColumn()),
+    //                    ErrorReason.INCOMPATIBLE_TYPES));
+    //      }
+    //    }
     return null;
   }
 
@@ -245,7 +259,12 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
       invocation.setType(new ErrorType(invocation.getLine(), invocation.getColumn()));
       return null;
     }
+    //
     invocation.setType(invocation.getName().getDefinition().getType().call(invocation.getArgs()));
+    //    invocation.setType(((FunType)
+    // invocation.getName().getDefinition().getType()).getReturnType());
+    //
+    // System.out.println(invocation.getName().getDefinition().getType().call(invocation.getArgs()));
     if (invocation.getType() == null) {
       ErrorManager.getInstance()
           .addError(
@@ -260,8 +279,9 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(ComparisonOperation comp, Type param) {
     super.visit(comp, param);
-    comp.setType(
-        comp.getLeftExpression().getType().comparison(comp.getRightExpression().getType()));
+    //    comp.setType(
+    //        comp.getLeftExpression().getType().comparison(comp.getRightExpression().getType()));
+    comp.setType(new IntType(0, 0));
     if (comp.getType() == null) {
       ErrorManager.getInstance()
           .addError(
@@ -275,15 +295,24 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(Return ret, Type param) {
     super.visit(ret, param);
-    if (!ret.getReturnExpression().getType().promotableTo(((FunType) param).getReturnType())) {
+    if (!ret.getReturnExpression().getType().promotesTo(((FunType) param).getReturnType())) {
       ErrorManager.getInstance()
           .addError(
               new Error(
                   new Location(ret.getLine(), ret.getColumn()), ErrorReason.INVALID_RETURN_TYPE));
-      //      ret.getReturnExpression().setType(new ErrorType(ret.getLine(), ret.getColumn()));
-
-      //      return null;
     }
+    //    if (!ret.getReturnExpression().getType().promotableTo(((FunType) param).getReturnType()))
+    // {
+    //      ErrorManager.getInstance()
+    //          .addError(
+    //              new Error(
+    //                  new Location(ret.getLine(), ret.getColumn()),
+    // ErrorReason.INVALID_RETURN_TYPE));
+    //      //      ret.getReturnExpression().setType(new ErrorType(ret.getLine(),
+    // ret.getColumn()));
+    //
+    //      //      return null;
+    //    }
     ret.getReturnExpression().setType(((FunType) param).getReturnType());
     return null;
   }

@@ -1,0 +1,22 @@
+def f(a::int, b::double) :: int do
+    return b
+end
+
+
+def main() do
+    integer::int
+    character::char
+
+    # Struct
+    pair :: defstruct do
+        a :: int
+        b :: double
+    end
+
+    integer = 3.8
+    character = 3
+
+    puts pair + integer, '\n', f == 3, '\n'
+
+    puts f(8.4, 'c')
+end

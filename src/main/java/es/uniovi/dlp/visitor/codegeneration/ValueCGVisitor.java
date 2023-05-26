@@ -3,6 +3,7 @@ package es.uniovi.dlp.visitor.codegeneration;
 import es.uniovi.dlp.ast.Expression;
 import es.uniovi.dlp.ast.Type;
 import es.uniovi.dlp.ast.expressions.*;
+import es.uniovi.dlp.ast.types.FunType;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
@@ -69,8 +70,16 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(ComparisonOperation comparison, Type param) {
-    super.visit(comparison, param);
-    generator.comparison(comparison.getOperation(), comparison.getLeftExpression().getType());
+    Type superiorType =
+        comparison
+            .getLeftExpression()
+            .getType()
+            .getSuperiorType(comparison.getRightExpression().getType());
+    comparison.getLeftExpression().accept(this, param);
+    generator.promoteTo(comparison.getLeftExpression().getType(), superiorType);
+    comparison.getRightExpression().accept(this, param);
+    generator.promoteTo(comparison.getRightExpression().getType(), superiorType);
+    generator.comparison(comparison.getOperation(), superiorType);
     return null;
   }
 
@@ -108,7 +117,17 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Invocation functionInvocation, Type param) {
-    for (Expression expression : functionInvocation.getArgs()) expression.accept(this, null);
+    int i = 0;
+    for (Expression expression : functionInvocation.getArgs()) {
+      expression.accept(this, null);
+      generator.promoteTo(
+          functionInvocation.getArgs().get(i).getType(),
+          ((FunType) functionInvocation.getName().getDefinition().getType())
+              .getParams()
+              .get(i)
+              .getType());
+      i++;
+    }
     generator.call(functionInvocation.getName().getName());
     return null;
   }

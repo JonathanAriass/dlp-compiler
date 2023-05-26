@@ -1,0 +1,18 @@
+def f(a::int, b::double) :: double do
+    return a + 1
+end
+
+
+def main() do
+    real::double
+    integer::int
+
+    integer = 'a'
+    real = integer
+
+    puts real + 1, '\n', 'a' - integer, '\n', real / 'a', '\n', 'a' * 'b', '\n'
+
+    puts 'a' == 'a', '\n', 'a' >= integer, '\n', integer < real, '\n', 'a' != real + 1, '\n'
+
+    puts f(97, 'a')
+end

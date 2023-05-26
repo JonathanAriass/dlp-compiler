@@ -53,11 +53,11 @@ public class FunType extends AbstractType {
       return super.call(args);
     }
     for (int i = 0; i < args.size(); i++) {
-      if (!args.get(i).getType().promotableTo(params.get(i).getType())) {
+      if (!args.get(i).getType().promotesTo(params.get(i).getType())) {
         return super.call(args);
       }
     }
-    return this;
+    return returnType;
   }
 
   @Override

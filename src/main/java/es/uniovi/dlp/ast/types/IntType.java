@@ -58,6 +58,22 @@ public class IntType extends AbstractType {
   }
 
   @Override
+  public boolean promotesTo(Type to) {
+    return (to instanceof DoubleType || to instanceof IntType);
+  }
+
+  @Override
+  public Type getSuperiorType(Type to) {
+    if (to instanceof DoubleType) {
+      return to;
+    }
+    if (to instanceof CharType || to instanceof IntType) {
+      return this;
+    }
+    return super.getSuperiorType(to);
+  }
+
+  @Override
   public Type logical(Type type) {
     if (type instanceof IntType) {
       return type;

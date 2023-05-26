@@ -25,7 +25,7 @@ public class DoubleType extends AbstractType {
 
   @Override
   public Type arithmetic(Type type) {
-    if (type instanceof DoubleType || type instanceof IntType) {
+    if (type instanceof DoubleType || type instanceof IntType || type instanceof CharType) {
       return this;
     }
     return super.arithmetic(type);
@@ -51,6 +51,16 @@ public class DoubleType extends AbstractType {
   public boolean promotableTo(Type to) {
     return (to instanceof FunType && ((FunType) to).getReturnType() instanceof DoubleType)
         || to instanceof DoubleType;
+  }
+
+  @Override
+  public boolean promotesTo(Type to) {
+    return (to instanceof DoubleType);
+  }
+
+  @Override
+  public Type getSuperiorType(Type to) {
+    return this;
   }
 
   @Override

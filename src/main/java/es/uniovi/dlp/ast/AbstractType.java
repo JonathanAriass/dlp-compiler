@@ -102,6 +102,19 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
+  public boolean promotesTo(Type to) {
+    return false;
+  }
+
+  @Override
+  public Type getSuperiorType(Type to) {
+    if (to instanceof ErrorType) {
+      return to;
+    }
+    return null;
+  }
+
+  @Override
   public int getNumberOfBytes() {
     return 0;
   }

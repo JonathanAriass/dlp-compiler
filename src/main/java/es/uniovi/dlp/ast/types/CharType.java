@@ -64,6 +64,25 @@ public class CharType extends AbstractType {
   }
 
   @Override
+  public boolean promotesTo(Type to) {
+    return (to instanceof IntType || to instanceof CharType || to instanceof DoubleType);
+  }
+
+  @Override
+  public Type getSuperiorType(Type to) {
+    if (to instanceof DoubleType) {
+      return to;
+    }
+    if (to instanceof IntType) {
+      return to;
+    }
+    if (to instanceof CharType) {
+      return new IntType(0, 0);
+    }
+    return super.getSuperiorType(to);
+  }
+
+  @Override
   public int getNumberOfBytes() {
     return 1;
   }
